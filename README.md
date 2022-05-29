@@ -31,7 +31,6 @@ volumes:
   backup-vol: {}
 ```
 
-
 ```
 root@cadcixztkv:~/hw-postgresql# psql -h 62.113.102.35 -U devops -d devops
 Password for user devops:
@@ -39,7 +38,6 @@ psql (12.11 (Ubuntu 12.11-0ubuntu0.20.04.1))
 Type "help" for help.
 
 ```
-
 
 ```
 devops=# \l
@@ -105,7 +103,6 @@ devops=# \l
 
 ```
 
-
 ```
 test_db=# \dt
              List of relations
@@ -116,7 +113,6 @@ test_db=# \dt
 (2 rows)
 
 ```
-
 
 ```
 devops=# GRANT ALL PRIVILEGES ON DATABASE test_db TO test_admin_user;
@@ -134,7 +130,6 @@ test_db=# \du
  test_simple_user |                                                            | {}
 
 ```
-
 
 ```
   grantor     |     grantee      | table_catalog | table_schema | table_name | privilege_type | is_grantable | with_hierarchy
@@ -166,7 +161,6 @@ test_db=# \du
 ~
 
 ```
-
 
 ## Задача 3
 
@@ -203,7 +197,7 @@ test_db=# \du
 
 *Решение:*
 
-
+```
 test_db=> insert into orders VALUES (1, 'Шоколад', 10), (2, 'Принтер', 3000), (3, 'Книга', 500), (4, 'Монитор', 7000), (5, 'Гитара', 4000);
 INSERT 0 5
 test_db=> insert into clients VALUES (1, 'Иванов Иван Иванович', 'USA'), (2, 'Петров Петр Петрович', 'Canada'), (3, 'Иоганн Себастьян Бах', 'Japan'), (4, 'Ронни Джеймс Дио', 'Russia'), (5, 'Ritchie Blackmore', 'Russia');
@@ -221,7 +215,7 @@ test_db=> select count (*) from clients;
 (1 row)
 
 test_db=>
-
+```
 
 ## Задача 4
 
@@ -253,6 +247,7 @@ test_db=> UPDATE  clients SET booking = 5 where id = 3;
 UPDATE 1
 
 ```
+
 ```
 test_db=> SELECT * FROM clients AS c WHERE exists (select id from orders as o where c.booking = o.id);
  id |       lastname       | country | booking
@@ -283,6 +278,7 @@ test_db=> EXPLAIN SELECT * FROM clients AS c WHERE exists (select id from orders
 (5 rows)
 
 ```
+
 Чтение данных из таблицы может выполняться несколькими способами. В нашем случае EXPLAIN сообщает, что используется Seq Scan — последовательное, блок за блоком, чтение данных таблицы. cost - некое сферическое в вакууме понятие, призванное оценить затратность операции. Первое значение 0.00 — затраты на получение первой строки. Второе — 18.10 — затраты на получение всех строк. rows — приблизительное количество возвращаемых строк при выполнении операции Seq Scan. Это значение возвращает планировщик. width — средний размер одной строки в байтах.
 
 Hash. Сначала просматривается (Seq Scan) таблица. Для каждой её строки вычисляется хэш (Hash).
